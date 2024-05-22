@@ -58,6 +58,10 @@ public class BoardDaoImpl implements BoardDao{
 	public int delete(BoardVo boardVo) {
 		return sqlSession.delete("board.boardDelete", boardVo);
 	}
+	@Override
+	public int boardNum() {
+		return sqlSession.selectOne("board.boardNum");
+	}
 	
 	
 }

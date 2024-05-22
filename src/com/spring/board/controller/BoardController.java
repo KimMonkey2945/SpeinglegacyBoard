@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -82,9 +84,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/board/boardWrite.do", method = RequestMethod.GET)
-	public String boardWrite(Locale locale, Model model) throws Exception{
-		
-		
+	public String boardWrite(Locale locale, Model model, BoardVo boardVo) throws Exception{
+		int boardNum = boardService.boardNum();
+		model.addAttribute("boardNum", boardNum + 1);
+		System.out.println("boardNum : "+ boardNum);
 		return "board/boardWrite";
 	}
 	
@@ -107,6 +110,68 @@ public class BoardController {
 		System.out.println("callbackMsg::"+callbackMsg);
 		
 		return callbackMsg;
+	}
+	
+	
+	/*
+	 * @RequestMapping(value = "/board/manyBoardWriteAction.do", method =
+	 * RequestMethod.POST)
+	 * 
+	 * @ResponseBody public String manyBoardWriteAction(Locale locale, @RequestBody
+	 * Map<String, Object> paramMap, Model model) throws Exception { HashMap<String,
+	 * String> result = new HashMap<String, String>(); CommonUtil commonUtil = new
+	 * CommonUtil(); int resultCnt = 0;
+	 * 
+	 * List<String> boardTitles = (List<String>) paramMap.get("boardTitle");
+	 * List<String> boardComments = (List<String>) paramMap.get("boardComment");
+	 * List<String> boardNums = (List<String>) paramMap.get("boardNum");
+	 * 
+	 * for (int i = 0; i < boardTitles.size(); i++) { BoardVo board = new BoardVo();
+	 * board.setBoardTitle(boardTitles.get(i));
+	 * board.setBoardComment(boardComments.get(i));
+	 * board.setBoardNum(Integer.parseInt(boardNums.get(i)));
+	 * 
+	 * boardService.boardInsert(board); resultCnt += 1; }
+	 * 
+	 * String page = "1"; result.put("success", (resultCnt == boardTitles.size()) ?
+	 * "Y" : "N"); result.put("pageNo", page);
+	 * 
+	 * String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+	 * System.out.println("callbackMsg::" + callbackMsg);
+	 * 
+	 * return callbackMsg; }
+	 */
+	
+	//version2
+	@RequestMapping(value = "/board/manyBoardWriteAction.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String manyBoardWriteAction(Locale locale, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+	    HashMap<String, String> result = new HashMap<String, String>();
+	    CommonUtil commonUtil = new CommonUtil();
+	    int resultCnt = 0;
+
+	    List<String> boardTitles = (List<String>) paramMap.get("boardTitle");
+	    List<String> boardComments = (List<String>) paramMap.get("boardComment");
+	    List<String> boardNums = (List<String>) paramMap.get("boardNum");
+
+	    for (int i = 0; i < boardTitles.size(); i++) {
+	        BoardVo board = new BoardVo();
+	        board.setBoardTitle(boardTitles.get(i));
+	        board.setBoardComment(boardComments.get(i));
+	        board.setBoardNum(Integer.parseInt(boardNums.get(i)));
+
+	        boardService.boardInsert(board);
+	        resultCnt += 1;
+	    }
+
+	    String page = "1";
+	    result.put("success", (resultCnt == boardTitles.size()) ? "Y" : "N");
+	    result.put("pageNo", page);
+
+	    String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+	    System.out.println("callbackMsg::" + callbackMsg);
+
+	    return callbackMsg;
 	}
 	
 	// update
@@ -146,11 +211,14 @@ public class BoardController {
 		return callbackMsg;
 	}
 	
-	@RequestMapping(value = "/board/{boardType}/{boardNum}/boardDelete.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/board/{boardType}/{boardNum}/boardDelete.do", method = RequestMethod.POST)
+	@ResponseBody
 	public String boardDeleteAction(Locale locale, BoardVo boardVo, Model model, PageVo pageVo) throws Exception{
 		
-		boardService.boardDelete(boardVo);
+		HashMap<String, String> result = new HashMap<String, String>();
+		CommonUtil commonUtil = new CommonUtil();
 		
+		int resultCnt = boardService.boardDelete(boardVo);
 		List<BoardVo> boardList = new ArrayList<BoardVo>();
 		
 		int page = 1;
@@ -165,11 +233,18 @@ public class BoardController {
 		
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("totalCnt", totalCnt);
-		// 수정
-		model.addAttribute("pageNo", pageVo.getPageNo());
+
+
+		result.put("success", (resultCnt > 0)?"Y":"N");
+		// 수정한 부분
+		result.put("resultCnt",  String.valueOf(resultCnt));
 		
+		String callbackMsg = commonUtil.getJsonCallBackString(" ",result);
+
+		System.out.println("callbackMsg::"+callbackMsg);
 		
-		return "board/boardList";
+		return callbackMsg;
+	
 	}
 	
 }

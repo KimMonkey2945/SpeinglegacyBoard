@@ -9,7 +9,7 @@
 </head>
 <script type="text/javascript">
 
-	$j(document).ready(function(){
+	$(document).ready(function(){
 	});
 
 </script>
@@ -56,6 +56,8 @@
 			<a href ="/board/boardWrite.do">±Û¾²±â</a>
 		</td>
 	</tr>
+	<tr></tr>
+	<tr></tr>
 </table>	
 </body>
 </html>

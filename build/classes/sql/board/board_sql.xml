@@ -80,6 +80,8 @@
     	UPDATE BOARD
     	SET BOARD_TITLE = #{boardTitle}
     	   ,BOARD_COMMENT = #{boardComment}
+    	   ,MODIFIER = 'SYSTEM'
+    	   ,MODIFIED_TIME = TO_CHAR(SYSDATE)
     	WHERE 
     	BOARD_TYPE = #{boardType}
     	AND BOARD_NUM = #{boardNum}
@@ -91,4 +93,8 @@
     	BOARD_TYPE = #{boardType}
     	AND BOARD_NUM = #{boardNum}
     </delete>
+    
+    <select id="boardNum" resultType="Integer">
+    	SELECT MAX(BOARD_NUM) FROM BOARD
+    </select>
 </mapper>

@@ -9,12 +9,12 @@
 </head>
 <script type="text/javascript">
 
-	$j(document).ready(function(){
+	$(document).ready(function(){
 		
-		$j("#submit").on("click",function(){
+		$("#submit").on("click",function(){
 			
-			var $frm = $j('.boardUpdate :input');
-			var param = $frm.serialize();
+			var frm = $('.boardUpdate :input');
+			var param = frm.serialize();
 			
 			var boardType = ${board.boardType};
 			var boardNum = ${board.boardNum};
@@ -22,7 +22,7 @@
 			console.log(boardType);
 			console.log(boardNum);
 
-			$j.ajax({
+			$.ajax({
 			    url : "/board/" + boardType + "/" + boardNum + "/boardUpdate.do",
 			    dataType: "json",
 			    type: "POST",

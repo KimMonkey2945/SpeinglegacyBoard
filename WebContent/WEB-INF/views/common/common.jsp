@@ -10,9 +10,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title></title>
 </head>
-<script src="/resources/js/jquery-1.10.2.js"></script>
+<%-- <script src="/resources/js/jquery-1.10.2.js"></script> --%>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	var $j = jQuery.noConflict();
+	/* var $j = jQuery.noConflict(); */
 </script>
 <body>
 

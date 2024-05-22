@@ -54,5 +54,4 @@ public class BoardVo {
 		this.modifier = modifier;
 	}
 	
-	
 }

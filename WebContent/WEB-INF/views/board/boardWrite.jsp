@@ -9,49 +9,169 @@
 </head>
 <script type="text/javascript">
 
-	$j(document).ready(function(){
+	$(document).ready(function(){
 		
-		$j("#submit").on("click",function(){
+		var boardNum = Number("${boardNum}") + 1;
+		
+		var formDataJson = $('#boardWrite').serializeObject();
+		console.log('formDataJson', formDataJson)
+		
+		$("#submit").on("click",function(){
 			
-			var $frm = $j('.boardWrite :input');
-			var param = $frm.serialize();
+			var formData = {};
+			var formDataArray = $('.boardWrite :input ').serializeArray();
 
-			$j.ajax({
-			    url : "/board/boardWriteAction.do",
-			    dataType: "json",
-			    type: "POST",
-			    data : param,
-			    success: function(data, textStatus, jqXHR)
-			    {
-			    	console.log(data)
-					alert("작성완료");
-					alert("메세지:"+data.success);
-					location.href = "/board/boardList.do?pageNo=" + data.pageNo;
-			    },
-			    error: function (jqXHR, textStatus, errorThrown)
-			    {
-			    	alert("실패");
-			    }
-			});
+ 			/* console.log(formDataArray.length);
+			console.log(formDataArray); */
+			
+			formDataArray.forEach(function(item){
+				if (formData[item.name]) {
+					if (!Array.isArray(formData[item.name])) {
+						formData[item.name] = [formData[item.name]];
+					}
+					formData[item.name].push(item.value);
+				} else {
+					formData[item.name] = item.value;
+				}
+			})
+			
+			
+/* 			console.log("formData", formData); */
+			
+			if(formDataArray.length == 3){
+				
+				$.ajax({
+				    url : "/board/boardWriteAction.do",
+				    dataType: "json",
+				    type: "POST",
+				    data : formData,
+				    success: function(data, textStatus, jqXHR)
+				    {
+						alert("작성완료");
+						alert("메세지:"+data.success);
+						location.href = "/board/boardList.do?pageNo=" + data.pageNo;
+				    },
+				    error: function (jqXHR, textStatus, errorThrown)
+				    {
+				    	alert("실패");
+				    }
+				    
+				    
+				});
+				
+			}else{
+				
+				$.ajax({
+				    url : "/board/manyBoardWriteAction.do",
+				    dataType: "json",
+				    type: "POST",
+				    contentType: "application/json; charset=UTF-8",
+				    data : JSON.stringify(formData),
+				    success: function(data, textStatus, jqXHR)
+				    {
+						alert("작성완료");
+						alert("메세지:"+data.success);
+						location.href = "/board/boardList.do?pageNo=" + data.pageNo;
+				    },
+				    error: function (jqXHR, textStatus, errorThrown)
+				    {
+				    	alert("실패");
+				    }
+				    
+				    
+				});
+				
+				
+				
+			}
+
 		});
+				
+		
+		$("#addRow").on("click", function(){	
+		
+		var str = "";
+		
+		/* str += "<tr>"
+		str += 	"<td>"
+		str += 		"<table border ='1'>" */
+		str += 			"<tr>"
+		str += 				"<td width='120' align='center'>"
+ 		str +=				"<input type='checkbox' id='checkBox' name='checkBox'/>"
+		str += 				"Title"
+		str += 				"</td>"
+		str += 				"<td width='400'>"
+		str += 				"<input name='boardTitle' type='text' size='50' value='${board.boardTitle}'> "
+		str += 				"</td>"
+		str += 			"</tr>"
+		str += 			"<tr>"
+		str += 				"<td height='300' align='center'>"
+		str += 				"Comment"
+		str += 				"</td>"
+		str += 				"<td valign='top'>"
+		str += 				"<textarea name='boardComment'  rows='20' cols='55'>${board.boardComment}</textarea>"
+		str += 				"</td>"
+		str += 			"</tr>"
+		str +=          "<input type='hidden' name='boardNum' value='" + boardNum++ + "'>";
+		/* str += 			"<tr>"
+		str += 				"<td align='center'>"
+		str += 				"Writer"
+		str += 				"</td>"
+		str += 				"<td>"
+		str += 				"</td>"
+		str += 			"</tr>"
+		str += 		"</table>"
+		str += 	"</td>" 
+		str += "</tr>"*/
+		
+		$("#addplace").append(str);
+		console.log($("#mainTable tbody tr").length)
+		
+		var formDataArray = $('.boardWrite :input').serializeArray();
+		console.log(formDataArray);
+		
+		
+		});
+		
+		$("#deleteRow").on("click", function(){
+			
+			/* if($("input[name=mainCheckBox]:checked")){
+				$(this).closest("tr").next().remove(); 
+	            $(this).closest("tr").remove();
+			} */ /* 메인까지 삭제 일단 보류 */
+			
+			 $("input[name=checkBox]:checked").each(function (){
+		            var $checkboxRow = $(this).closest("tr");
+		            var $commentRow = $checkboxRow.next();
+		            $checkboxRow.remove();
+		            $commentRow.remove();
+		      });
+			
+	    });
+
+			
 		
 	});
 	
 
 </script>
 <body>
-<form class="boardWrite">
+<form class="boardWrite" id="boardWrite">
 	<table align="center">
 		<tr>
 			<td align="right">
-			<input id="submit" type="button" value="작성">
+				<input id="addRow" name="addRow" type="button" value="행추가">
+				<input id="deleteRow" name="deleteRow"  type="button" value="행삭제">
+				<input id="submit" name="submit"  type="button" value="작성">
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<table border ="1"> 
+			<input type='hidden' name='boardNum' value='${boardNum}'>
+				<table id="mainTable" border ="1"> 
 					<tr>
 						<td width="120" align="center">
+						<!-- <input type="checkbox" id="mainCheckbox" name="mainCheckbox"/> -->
 						Title
 						</td>
 						<td width="400">
@@ -66,6 +186,7 @@
 						<textarea name="boardComment"  rows="20" cols="55">${board.boardComment}</textarea>
 						</td>
 					</tr>
+					<tbody id="addplace"></tbody>
 					<tr>
 						<td align="center">
 						Writer

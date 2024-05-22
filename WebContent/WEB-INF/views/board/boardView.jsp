@@ -7,26 +7,35 @@
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>boardView</title>
 </head>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 <script type="text/javascript">
 
-	$j(document).ready(function(){
+	$(document).ready(function(){
 		
-		$j("#delete").on("click",function(){
+		$("#delete").on("click",function(){
 			
 			var boardType = ${board.boardType};
 			var boardNum = ${board.boardNum};
-			
-			console.log(boardType);
-			console.log(boardNum);
+			var $frm = $('.boardDelete :input');
+			var param = $frm.serialize();
 
-			$j.ajax({
+			console.log(boardNum);
+			console.log(boardType);
+
+			$.ajax({
 			    url : "/board/" + boardType + "/" + boardNum + "/boardDelete.do",
-			    dataType: "json",
+			    dataType: "JSON",
 			    type: "POST",
-			    data : data,
-			    success: function(data, textStatus, jqXHR)
+			    data : param,
+			    success: function(data,textStatus, jqXHR)
 			    {
-			    	alert("삭제성공")
+			    	console.log(data);
+			    	if(data.resultCnt == 0){
+			    		alert("이미 삭제된 게시물입니다.")
+			    	}else{
+			    		alert("삭제완료")
+			    	}
+			    	location.href = "/board/boardList.do"
 			    },
 			    error: function (jqXHR, textStatus, errorThrown)
 			    {
@@ -40,48 +49,55 @@
 
 </script>
 <body>
-<table align="center">
+<form class="boardDelete">
+	<table align="center">
+		<tr>
+			<td>
+				<table border ="1">
+					<tr>
+						<td width="120" align="center">
+						Title
+						</td>
+						<td width="400">
+						${board.boardTitle}
+						</td>
+					</tr>
+					<tr>
+						<td height="300" align="center">
+						Comment
+						</td>
+						<td>
+						${board.boardComment}
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+						Writer
+						</td>
+						<td>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+<table align="center" style="border-spacing:10px; border-collapse:separate;">
 	<tr>
 		<td>
-			<table border ="1">
-				<tr>
-					<td width="120" align="center">
-					Title
-					</td>
-					<td width="400">
-					${board.boardTitle}
-					</td>
-				</tr>
-				<tr>
-					<td height="300" align="center">
-					Comment
-					</td>
-					<td>
-					${board.boardComment}
-					</td>
-				</tr>
-				<tr>
-					<td align="center">
-					Writer
-					</td>
-					<td>
-					</td>
-				</tr>
-			</table>
+			<%-- <a onclick="javascript:sendPost()" id="delete" href="/board/${board.boardType}/${board.boardNum}/boardDelete.do">delete</a> --%>
+			<input id="delete" type="button" value="delete" />
 		</td>
-	</tr>
-
-	<tr>
-		<td align="left">
-			<a href = "/board/${board.boardType}/${board.boardNum}/boardUpdateView.do?pageNo=${pageNo}">update</a>
+		<td style="width:30px;"></td>
+		<td>
+			<a href="/board/${board.boardType}/${board.boardNum}/boardUpdateView.do?pageNo=${pageNo}">update</a>
 		</td>
-		<td align="center">
-			<a id="delete" href="/board/${board.boardType}/${board.boardNum}/boardDelete.do">delete</a>
-		</td>
-		<td align="right">
+		<td style="width:30px;"></td>
+		<td>
 			<a href="/board/boardList.do">List</a>
 		</td>
 	</tr>
-</table>	
+</table>
+</form>	
 </body>
 </html>

@@ -21,4 +21,6 @@ public interface BoardDao {
 
 	public int delete(BoardVo boardVo);
 
+	public int boardNum();
+
 }

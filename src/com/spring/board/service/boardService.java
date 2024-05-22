@@ -21,4 +21,6 @@ public interface boardService {
 
 	public int boardDelete(BoardVo boardVo);
 
+	public int boardNum();
+
 }
