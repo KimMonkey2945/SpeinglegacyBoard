@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@include file="/WEB-INF/views/common/common.jsp"%>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -31,15 +31,15 @@
 			    {
 			    	console.log(data);
 			    	if(data.resultCnt == 0){
-			    		alert("ÀÌ¹Ì »èÁ¦µÈ °Ô½Ã¹°ÀÔ´Ï´Ù.")
+			    		alert("ì´ë¯¸ ì‚­ì œëœ ê²Œì‹œë¬¼ì…ë‹ˆë‹¤.")
 			    	}else{
-			    		alert("»èÁ¦¿Ï·á")
+			    		alert("ì‚­ì œì™„ë£Œ")
 			    	}
 			    	location.href = "/board/boardList.do"
 			    },
 			    error: function (jqXHR, textStatus, errorThrown)
 			    {
-			    	alert("½ÇÆĞ");
+			    	alert("ì‹¤íŒ¨");
 			    }
 			});
 		});
@@ -54,6 +54,16 @@
 		<tr>
 			<td>
 				<table border ="1">
+					<tr>
+						<td width="120" align="center">
+								Type
+						</td>
+						<td width="400">
+							<select id="boardType" name="boardType">
+								<option value="${board.boardType}">${board.code.codeName}</option>
+							</select>
+						</td>
+						</tr>
 					<tr>
 						<td width="120" align="center">
 						Title

@@ -23,4 +23,8 @@ public interface boardService {
 
 	public int boardNum();
 
+	public List<BoardVo> filterBoardList(List<String> boardTypes, PageVo pageVo);
+
+	public int selectFilteredBoardCnt(List<String> boardTypes);
+
 }

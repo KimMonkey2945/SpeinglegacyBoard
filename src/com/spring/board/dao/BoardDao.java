@@ -23,4 +23,8 @@ public interface BoardDao {
 
 	public int boardNum();
 
+	public List<BoardVo> filteredBoardList(List<String> boardTypes, PageVo pageVo);
+
+	public int selectFilteredBoardCnt(List<String> boardTypes);
+
 }

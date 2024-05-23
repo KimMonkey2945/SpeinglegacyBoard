@@ -30,9 +30,19 @@ public class boardServiceImpl implements boardService{
 	}
 	
 	@Override
+	public List<BoardVo> filterBoardList(List<String> boardTypes, PageVo pageVo) {
+		return boardDao.filteredBoardList(boardTypes, pageVo);
+	}
+	
+	@Override
 	public int selectBoardCnt() throws Exception {
 		// TODO Auto-generated method stub
 		return boardDao.selectBoardCnt();
+	}
+	
+	@Override
+	public int selectFilteredBoardCnt(List<String>boardTypes) {
+		return boardDao.selectFilteredBoardCnt(boardTypes);
 	}
 	
 	@Override
@@ -66,6 +76,9 @@ public class boardServiceImpl implements boardService{
 	public int boardNum() {
 		return boardDao.boardNum();
 	}
+
+
+
 	
 	
 	

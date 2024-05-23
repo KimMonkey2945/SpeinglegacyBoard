@@ -1,6 +1,8 @@
 package com.spring.board.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,21 @@ public class BoardDaoImpl implements BoardDao{
 	}
 	
 	@Override
+	public List<BoardVo> filteredBoardList(List<String> boardTypes, PageVo pageVo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("boardTypes", boardTypes);
+        params.put("pageVo", pageVo);
+        return sqlSession.selectList("board.filteredBoardList", params);
+	}
+	
+	@Override
+	public int selectFilteredBoardCnt(List<String> boardTypes) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("boardTypes", boardTypes);
+		return sqlSession.selectOne("board.selectFilteredBoardCnt", params);
+	}
+	
+	@Override
 	public int selectBoardCnt() throws Exception {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("board.boardTotal");
@@ -62,6 +79,7 @@ public class BoardDaoImpl implements BoardDao{
 	public int boardNum() {
 		return sqlSession.selectOne("board.boardNum");
 	}
+
 	
 	
 }
