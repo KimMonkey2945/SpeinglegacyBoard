@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+    
+    <resultMap type="com.spring.user.vo.UserVo" id="userVo">
+    	<result property="userId" 	column="USER_ID"/>
+    	<result property="userPw" 	column="USER_PW"/>
+    	<result property="userName" 	column="USER_NAME"/>
+    	<result property="userPhone1" column="USER_PHONE1"/>
+    	<result property="userPhone2" column="USER_PHONE2"/>
+    	<result property="userPhone3" column="USER_PHONE3"/>
+    	<result property="userAddr1" column="USER_ADDR1"/>
+    	<result property="userAddr2" column="USER_ADDR1"/>
+    	<result property="userCompany" column="USER_COMPANY"/>
+    	<result property="creator" column="CREATOR"/>
+    	<result property="createTime" column="CREATE_TIME"/>
+    	<result property="modifier" column="MODIFIER"/>
+    	<result property="modifiedTime" column="MODIFIED_TIME"/>
+    	<!-- <association property="code" javaType="com.spring.board.vo.CodeVo">
+            <result property="codeType" column="CODE_TYPE"/>
+            <result property="codeId" column="CODE_ID"/>
+            <result property="codeName" column="CODE_NAME"/>
+            <result property="creator" column="CREATOR"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="modifier" column="MODIFIER"/>
+            <result property="modifiedTime" column="MODIFIED_TIME"/>
+        </association> -->
+        <collection property="code" resultMap="codeVo"/>
+    </resultMap>
+    
+	    <resultMap type="com.spring.board.vo.CodeVo" id="codeVo">
+	   		<result property="codeType" column="CODE_TYPE"/>
+	        <result property="codeId" column="CODE_ID"/>
+	        <result property="codeName" column="CODE_NAME"/>
+	        <result property="creator" column="CREATOR"/>
+	        <result property="createTime" column="CREATE_TIME"/>
+	        <result property="modifier" column="MODIFIER"/>
+	        <result property="modifiedTime" column="MODIFIED_TIME"/>
+	    </resultMap>
+    
+    
+    <select id="userSignUp" parameterType="com.spring.user.vo.UserVo">
+        INSERT INTO 
+        USER_INFO
+        (USER_ID
+		,USER_PW
+		,USER_NAME
+		,USER_PHONE1
+		,USER_PHONE2
+		,USER_PHONE3
+		,USER_ADDR1
+		,USER_ADDR2
+		,USER_COMPANY
+		,CREATOR
+		,CREATE_TIME
+		,MODIFIER
+		,MODIFIED_TIME
+        )
+        VALUES
+        (#{userId}
+		,#{userPw}
+		,#{userName}
+		,#{userPhone1}
+		,#{userPhone2}
+		,#{userPhone3}
+		,#{userAddr1}
+		,#{userAddr2}
+		,#{userCompany}
+        ,'SYSTEM'
+        ,TO_CHAR(SYSDATE)
+        ,'SYSTEM'
+        ,TO_CHAR(SYSDATE)
+        )
+    </select>
+    
+    <select id="selectUsers" resultMap="userVo">
+    	
+    	SELECT 
+    	 U.USER_ID
+		,U.USER_PW
+		,U.USER_NAME
+		,C.CODE_NAME
+		,U.USER_PHONE2
+		,U.USER_PHONE3
+		,U.USER_ADDR1
+		,U.USER_ADDR2
+		,U.USER_COMPANY
+		,U.CREATOR
+		,U.CREATE_TIME
+		,U.MODIFIER
+		,U.MODIFIED_TIME
+		FROM USER_INFO U
+		JOIN COM_CODE C
+		ON U.USER_PHONE1 = C.CODE_ID
+    	
+   
+    </select>
+    
+    <select id="checkUserId" parameterType="String" resultType="int">
+    	
+    	SELECT COUNT(*) 
+    	FROM USER_INFO
+    	WHERE USER_ID = #{userId}
+    	   
+    </select>
+    
+    <select id="loginUserId" parameterType="com.spring.user.vo.UserVo" resultMap="userVo">
+    	
+    	SELECT * 
+    	FROM USER_INFO
+    	WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+    	   
+    </select>
+    
+    
+    <!-- <update id="boardUpdate" parameterType="com.spring.board.vo.BoardVo">
+    	UPDATE BOARD
+    	SET BOARD_TYPE =  #{updateBoardType}
+    	   ,BOARD_TITLE = #{boardTitle}
+    	   ,BOARD_COMMENT = #{boardComment}
+    	   ,MODIFIER = 'SYSTEM'
+    	   ,MODIFIED_TIME = TO_CHAR(SYSDATE)
+    	WHERE 
+    	BOARD_TYPE = #{boardType}
+    	AND BOARD_NUM = #{boardNum}
+    </update>
+    
+    <delete id="boardDelete" parameterType="com.spring.board.vo.BoardVo">
+    	DELETE BOARD
+    	WHERE
+    	BOARD_TYPE = #{boardType}
+    	AND BOARD_NUM = #{boardNum}
+    </delete>
+    
+    <select id="boardNum" resultType="Integer">
+    	SELECT MAX(BOARD_NUM) FROM BOARD
+    </select>
+    
+    <select id="getCodeMenu" resultMap="codeVo">
+    	
+    	SELECT * 
+    	FROM COM_CODE
+    	WHERE CODE_TYPE = 'menu'
+    
+    </select> -->
+    
+    
+</mapper>

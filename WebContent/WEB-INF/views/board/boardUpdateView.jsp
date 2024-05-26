@@ -69,10 +69,9 @@
 						</td>
 						<td width="400">
 							<select id="boardType" name="boardType">
-								<option value="a01">일반</option>
-								<option value="a02">Q&A</option>
-								<option value="a03">익명</option>
-								<option value="a04">자유</option>
+							<c:forEach items='${code}' var='code'>
+								<option value="${code.codeId}">${code.codeName}</option>
+							</c:forEach>
 							</select>
 						</td>
 					</tr>

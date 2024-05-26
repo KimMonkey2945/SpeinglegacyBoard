@@ -3,9 +3,10 @@ package com.spring.board.service;
 import java.util.List;
 
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
-public interface boardService {
+public interface BoardService {
 
 	public String selectTest() throws Exception;
 
@@ -26,5 +27,7 @@ public interface boardService {
 	public List<BoardVo> filterBoardList(List<String> boardTypes, PageVo pageVo);
 
 	public int selectFilteredBoardCnt(List<String> boardTypes);
+
+	public List<CodeVo> selectCodeType(CodeVo codeVo);
 
 }

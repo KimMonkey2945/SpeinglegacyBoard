@@ -3,6 +3,7 @@ package com.spring.board.dao;
 import java.util.List;
 
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
 public interface BoardDao {
@@ -26,5 +27,7 @@ public interface BoardDao {
 	public List<BoardVo> filteredBoardList(List<String> boardTypes, PageVo pageVo);
 
 	public int selectFilteredBoardCnt(List<String> boardTypes);
+
+	public List<CodeVo> selectCodeType(CodeVo codeVo);
 
 }

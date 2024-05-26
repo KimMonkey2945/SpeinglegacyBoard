@@ -1,11 +1,15 @@
-package com.spring.user.dao;
+package com.spring.user.service;
 
 import java.util.List;
 
+import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
+import com.spring.board.vo.PageVo;
 import com.spring.user.vo.UserVo;
 
-public interface UserDao {
-
+public interface UserService {
+	
+	
 	public int userSignUp(UserVo userVo);
 
 	public int checkUserId(String userId);
@@ -13,5 +17,8 @@ public interface UserDao {
 	public List<UserVo> selectUsers();
 
 	public UserVo loginUserId(UserVo userVo);
+
+	
+	
 
 }

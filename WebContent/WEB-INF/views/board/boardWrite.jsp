@@ -89,10 +89,9 @@
             str +=	"</td>"
             str +=	"<td width='400'>"
             str +=		"<select id='boardType' name='boardType'>"
-            str +=			"<option value='a01'>일반</option>"
-            str +=			"<option value='a02'>Q&A</option>"
-            str +=			"<option value='a03'>익명</option>"
-            str +=			"<option value='a04'>자유</option>"
+            str +=			"<c:forEach items='${code}' var='code'>"
+            str +=					'<option value="${code.codeId}">${code.codeName}</option>'
+            str +=			"</c:forEach>"
             str +=		"</select>"
             str +=	"</td>"
             str +="</tr>"
@@ -139,8 +138,8 @@
 			<tr>
 				<td align="right"><input id="addRow" name="addRow"
 					type="button" value="행추가"> <input id="deleteRow"
-					name="deleteRow" type="button" value="행삭제"> <input
-					id="submit" name="submit" type="button" value="작성"></td>
+					name="deleteRow" type="button" value="행삭제"> 
+					<input id="submit" name="submit" type="button" value="작성"></td>
 			</tr>
 			<tr>
 				<td><input type='hidden' name='boardNum' value='${boardNum}'>
@@ -151,10 +150,9 @@
 							</td>
 							<td width="400">
 								<select id="boardType" name="boardType">
-									<option value="a01">일반</option>
-									<option value="a02">Q&A</option>
-									<option value="a03">익명</option>
-									<option value="a04">자유</option>
+									<c:forEach items='${code}' var='code'>
+										<option value="${code.codeId}">${code.codeName}</option>
+									</c:forEach>
 								</select>
 							</td>
 						</tr>

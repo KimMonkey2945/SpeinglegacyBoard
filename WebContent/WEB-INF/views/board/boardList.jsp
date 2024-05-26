@@ -12,6 +12,7 @@
 
 	$(document).ready(function(){
 		
+		var checkBoardType = [];
 		
 		$('#checkAll').on('click', function(){
 			if($('#checkAll').is(':checked')){
@@ -19,8 +20,20 @@
 			} else {
 				$('input[name="boardType"]').prop('checked', false);
 			}
-			
 		});
+		
+		$('input:checkbox[name="boardType"]').on('click', function(){
+			if($('input[name="boardType"]:checked').length != 4){
+				$('#checkAll').prop('checked', false);
+			}else{
+				$('#checkAll').prop('checked', true);
+			}
+// 			console.log($('input[name="boardType"]:checked').val());
+// 			console.log($('input[name="boardType"]:checked').length);
+		});
+		
+
+
 		
 		$('#search').on('click', function(){
 			var checkValues = [];
@@ -81,7 +94,12 @@
 <body>
 
 <table align="center" style="border-spacing:10px; border-collapse:separate">
+
 	<tr>
+		<td align="left" style="width:350px;">
+			<a href="/user/loginForm.do">login</a>
+			<a href="/user/signUpForm.do" >join</a>
+		</td>
 		<td id="totalCnt" align="right">
 			total : ${totalCnt}
 		</td>
@@ -117,15 +135,17 @@
 		</td>
 	</tr>
 </table>
-<table align="center" style="border-spacing:30px; border-collapse:separate">
+<table align="center" style="border-collapse:separate">
 	<tr>
-		<td style="width:30px;"><input id="checkAll" type="checkbox">전체</td>
-		<td style="width:30px;"><input type="checkbox" name="boardType" value="a01">일반</td>
-		<td style="width:30px;"><input type="checkbox" name="boardType" value="a02">Q&A</td>
-		<td style="width:30px;"><input type="checkbox" name="boardType" value="a03">익명</td>
-		<td style="width:30px;"><input type="checkbox" name="boardType" value="a04">자유</td>
-		<td style="width:30px;"><input id="search" type="submit" value="조회"></td>
-		<td align="right"><a href ="/board/boardWrite.do">글쓰기</a></td>
+		<td style="width: auto"><input id="checkAll" type="checkbox">전체</td>
+		<c:forEach items='${code}' var='code'>
+			<td style="width: auto"><input type="checkbox" name="boardType" value="${code.codeId}">${code.codeName}</td>
+		</c:forEach>
+<!-- 		<td style="width: auto"><input type="checkbox" name="boardType" value="a02">Q&A</td>
+		<td style="width: auto"><input type="checkbox" name="boardType" value="a03">익명</td>
+		<td style="width: auto"><input type="checkbox" name="boardType" value="a04">자유</td> -->
+		<td style="width: auto"><input id="search" type="submit" value="조회"></td>
+		<td style="width: auto"><a href ="/board/boardWrite.do">글쓰기</a></td>
 	</tr>
 </table>
 </body>

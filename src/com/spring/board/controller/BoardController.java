@@ -14,24 +14,20 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 
 import com.spring.board.HomeController;
-import com.spring.board.service.boardService;
+import com.spring.board.service.BoardService;
 import com.spring.board.vo.BoardFilterRequest;
 import com.spring.board.vo.BoardVo;
 import com.spring.board.vo.CodeVo;
-import com.spring.board.vo.FilterVo;
 import com.spring.board.vo.PageVo;
 import com.spring.common.CommonUtil;
 
@@ -39,14 +35,15 @@ import com.spring.common.CommonUtil;
 public class BoardController {
 	
 	@Autowired 
-	boardService boardService;
+	BoardService boardService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping(value = "/board/boardList.do", method = RequestMethod.GET)
-	public String boardList(Locale locale, Model model,PageVo pageVo, BoardVo boardVo) throws Exception{
+	public String boardList(Locale locale, Model model,PageVo pageVo, BoardVo boardVo, CodeVo codeVo) throws Exception{
 		
 		List<BoardVo> boardList = new ArrayList<BoardVo>();
+		List<CodeVo> codeList = new ArrayList<CodeVo>();
 		
 		int page = 1;
 		int totalCnt = 0;
@@ -56,18 +53,23 @@ public class BoardController {
 		}
 		
 		boardList = boardService.SelectBoardList(pageVo);
-		totalCnt = boardService.selectBoardCnt();
+		codeVo.setCodeType("menu");
+		codeList = boardService.selectCodeType(codeVo);
+		totalCnt = boardService.selectBoardCnt();	
+		
 		
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("totalCnt", totalCnt);
 		model.addAttribute("pageNo", pageVo.getPageNo());
 		model.addAttribute("board", boardVo);
+		model.addAttribute("code", codeList);
 		
 		/*
-		 * for(BoardVo board : boardList) { System.out.println(board.get); }
+		 * for(CodeVo a : codeList) { System.out.println("codeVo.getCodeType() : " +
+		 * a.getCodeType());
+		 * 
+		 * }
 		 */
-		
-		
 		
 //		System.out.println(pageVo.getPageNo()); 숫자는 잘찍힘.
 		
@@ -75,24 +77,6 @@ public class BoardController {
 		
 	}
 	
-//	@RequestMapping(value = "/board/filteredBoardList.do", method = RequestMethod.POST)
-//	@ResponseBody
-//    public List<BoardVo> filteredBoardList(@RequestBody FilterVo filterVo, PageVo pageVo, Model model) throws Exception {
-//		 List<String> boardTypes = filterVo.getBoardTypes();
-//		 
-//		int page = 1;
-//		int totalCnt = 0;
-//		
-//		if(pageVo.getPageNo() == 0){
-//			pageVo.setPageNo(page);;
-//		}
-//		
-//		totalCnt = boardService.selectFilteredBoardCnt(boardTypes);
-//		
-//		model.addAttribute("totalCnt", totalCnt);
-//		
-//        return boardService.filterBoardList(boardTypes, pageVo);
-//    }
 
 	@RequestMapping(value = "/board/filteredBoardList.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -147,9 +131,13 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/board/boardWrite.do", method = RequestMethod.GET)
-	public String boardWrite(Locale locale, Model model, BoardVo boardVo) throws Exception{
+	public String boardWrite(Locale locale, Model model, BoardVo boardVo, CodeVo codeVo) throws Exception{
 		int boardNum = boardService.boardNum();
+		List<CodeVo> codeList = new ArrayList<CodeVo>();
+		codeVo.setCodeType("menu");
+		codeList = boardService.selectCodeType(codeVo);
 		model.addAttribute("boardNum", boardNum + 1);
+		model.addAttribute("code", codeList);
 		System.out.println("boardNum : "+ boardNum);
 		return "board/boardWrite";
 	}
@@ -177,35 +165,6 @@ public class BoardController {
 	 */
 	
 	
-	/*
-	 * @RequestMapping(value = "/board/manyBoardWriteAction.do", method =
-	 * RequestMethod.POST)
-	 * 
-	 * @ResponseBody public String manyBoardWriteAction(Locale locale, @RequestBody
-	 * Map<String, Object> paramMap, Model model) throws Exception { HashMap<String,
-	 * String> result = new HashMap<String, String>(); CommonUtil commonUtil = new
-	 * CommonUtil(); int resultCnt = 0;
-	 * 
-	 * List<String> boardTitles = (List<String>) paramMap.get("boardTitle");
-	 * List<String> boardComments = (List<String>) paramMap.get("boardComment");
-	 * List<String> boardNums = (List<String>) paramMap.get("boardNum");
-	 * 
-	 * for (int i = 0; i < boardTitles.size(); i++) { BoardVo board = new BoardVo();
-	 * board.setBoardTitle(boardTitles.get(i));
-	 * board.setBoardComment(boardComments.get(i));
-	 * board.setBoardNum(Integer.parseInt(boardNums.get(i)));
-	 * 
-	 * boardService.boardInsert(board); resultCnt += 1; }
-	 * 
-	 * String page = "1"; result.put("success", (resultCnt == boardTitles.size()) ?
-	 * "Y" : "N"); result.put("pageNo", page);
-	 * 
-	 * String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
-	 * System.out.println("callbackMsg::" + callbackMsg);
-	 * 
-	 * return callbackMsg; }
-	 */
-	
 	//version2
 	@RequestMapping(value = "/board/manyBoardWriteAction.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -224,11 +183,6 @@ public class BoardController {
 	        BoardVo board = mapper.convertValue(map, BoardVo.class);
 	        boardList.add(board);
 	        boardService.boardInsert(board);
-			/*
-			 * System.out.println("Board Title: " + board.getBoardTitle());
-			 * System.out.println("Board Comment: " + board.getBoardComment());
-			 * System.out.println("Board Num: " + board.getBoardNum());
-			 */
 	        System.out.println("BoardType  " + board.getBoardType()); 
 	        resultCnt++;
 	    }
@@ -247,15 +201,19 @@ public class BoardController {
 	@RequestMapping(value = "/board/{boardType}/{boardNum}/boardUpdateView.do", method = RequestMethod.GET)
 	public String boardUpdateView(Locale locale, Model model
 			,@PathVariable("boardType")String boardType
-			,@PathVariable("boardNum")int boardNum) throws Exception{
+			,@PathVariable("boardNum")int boardNum
+			,CodeVo codeVo) throws Exception{
 		
 		BoardVo boardVo = new BoardVo();
-		
+		List<CodeVo> codeList = new ArrayList<CodeVo>();
 		boardVo = boardService.selectBoard(boardType,boardNum);
-		
+		codeVo.setCodeType("menu");
+		codeList = boardService.selectCodeType(codeVo);
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("boardNum", boardNum);
 		model.addAttribute("board", boardVo);
+		model.addAttribute("code", codeList);
+		
 		
 		return "board/boardUpdateView";
 	}

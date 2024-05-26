@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.board.dao.BoardDao;
-import com.spring.board.service.boardService;
+import com.spring.board.service.BoardService;
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
 @Service
-public class boardServiceImpl implements boardService{
+public class BoardServiceImpl implements BoardService{
 	
 	@Autowired
 	BoardDao boardDao;
@@ -75,6 +76,11 @@ public class boardServiceImpl implements boardService{
 	@Override
 	public int boardNum() {
 		return boardDao.boardNum();
+	}
+
+	@Override
+	public List<CodeVo> selectCodeType(CodeVo codeVo) {
+		return boardDao.selectCodeType(codeVo);
 	}
 
 

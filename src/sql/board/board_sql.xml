@@ -51,7 +51,7 @@
 				BOARD	
 		) B
 		JOIN COM_CODE C
-		ON B.BOARD_TYPE = C.CODE_ID
+		ON B.BOARD_TYPE = C.CODE_ID 
 		WHERE NUMROW BETWEEN (#{pageNo}-1)*10 + 1 AND (#{pageNo})*10
     </select>
     
@@ -160,4 +160,14 @@
     <select id="boardNum" resultType="Integer">
     	SELECT MAX(BOARD_NUM) FROM BOARD
     </select>
+    
+    <select id="selectCodeType" parameterType="com.spring.board.vo.CodeVo" resultMap="codeVo">
+    	
+    	SELECT * 
+    	FROM COM_CODE
+    	WHERE CODE_TYPE = #{codeType}
+    
+    </select>
+    
+    
 </mapper>
