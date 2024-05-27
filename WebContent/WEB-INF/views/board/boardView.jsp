@@ -84,8 +84,7 @@
 						<td align="center">
 						Writer
 						</td>
-						<td>
-						</td>
+						<td>${board.creator}</td>
 					</tr>
 				</table>
 			</td>

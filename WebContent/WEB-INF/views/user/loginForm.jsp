@@ -11,6 +11,7 @@
 
 	$(document).ready(function(){
 		
+		
 		$('#login').on('click', function(){
 			
 			var userId = $('#loginUserId').val();
@@ -18,6 +19,18 @@
 			
 			console.log( "userId : " , userId);
 			console.log( "userPw : " , userPw);
+			
+			if(userId == ''){
+				alert('아이디를 입력해주세요.');
+				$('#loginUserId').focus();
+				return false;
+			}
+			
+			if(userPw == ''){
+				alert('비밀번호를 입력해주세요.');
+				$('#loginUserPassword').focus();
+				return false;
+			} 
 			
 			$.ajax({
 				url: '/user/loginAction.do',
@@ -40,6 +53,15 @@
 				}
 			});
 			
+		});
+		
+		$('#loginUserId').on('keyup', function(){
+			this.value = this.value.replace(/[^0-9a-zA-Z]/g, '').substring(0,15);
+			
+		});
+		
+		$('#loginUserPassword').on('keyup', function(){
+			this.value = this.value.replace(/[^0-9a-zA-Z]/g, '').substring(0,12);
 		});
 		
 	});

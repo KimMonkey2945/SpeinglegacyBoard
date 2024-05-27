@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -30,6 +31,8 @@ import com.spring.board.vo.BoardVo;
 import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 import com.spring.common.CommonUtil;
+import com.spring.session.SessionConst;
+import com.spring.user.vo.UserVo;
 
 @Controller
 public class BoardController {
@@ -40,7 +43,7 @@ public class BoardController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping(value = "/board/boardList.do", method = RequestMethod.GET)
-	public String boardList(Locale locale, Model model,PageVo pageVo, BoardVo boardVo, CodeVo codeVo) throws Exception{
+	public String boardList(Locale locale, Model model,PageVo pageVo, BoardVo boardVo, CodeVo codeVo, HttpServletRequest request) throws Exception{
 		
 		List<BoardVo> boardList = new ArrayList<BoardVo>();
 		List<CodeVo> codeList = new ArrayList<CodeVo>();
@@ -55,23 +58,20 @@ public class BoardController {
 		boardList = boardService.SelectBoardList(pageVo);
 		codeVo.setCodeType("menu");
 		codeList = boardService.selectCodeType(codeVo);
-		totalCnt = boardService.selectBoardCnt();	
+		totalCnt = boardService.selectBoardCnt();
 		
+		HttpSession session = request.getSession();
+		UserVo user = (UserVo) session.getAttribute(SessionConst.LOGIN_MEMBER);
+		
+		System.out.println("========user=========" + user);
 		
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("totalCnt", totalCnt);
 		model.addAttribute("pageNo", pageVo.getPageNo());
 		model.addAttribute("board", boardVo);
 		model.addAttribute("code", codeList);
+		model.addAttribute("user", user);
 		
-		/*
-		 * for(CodeVo a : codeList) { System.out.println("codeVo.getCodeType() : " +
-		 * a.getCodeType());
-		 * 
-		 * }
-		 */
-		
-//		System.out.println(pageVo.getPageNo()); 숫자는 잘찍힘.
 		
 		return "board/boardList";
 		
@@ -115,13 +115,16 @@ public class BoardController {
 	@RequestMapping(value = "/board/{boardType}/{boardNum}/boardView.do", method = RequestMethod.GET)
 	public String boardView(Locale locale, Model model
 			,@PathVariable("boardType")String boardType
-			,@PathVariable("boardNum")int boardNum, PageVo pageVo, BoardVo boardVo) throws Exception{
+			,@PathVariable("boardNum")int boardNum, PageVo pageVo, BoardVo boardVo, HttpServletRequest request) throws Exception{
 		
 		/* BoardVo boardVo = new BoardVo(); */
 		
 		
 		boardVo = boardService.selectBoard(boardType,boardNum);
+		HttpSession session = request.getSession();
+		UserVo user = (UserVo) session.getAttribute(SessionConst.LOGIN_MEMBER);
 		
+		model.addAttribute("user", user);
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("boardNum", boardNum);
 		model.addAttribute("board", boardVo);
@@ -131,14 +134,22 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/board/boardWrite.do", method = RequestMethod.GET)
-	public String boardWrite(Locale locale, Model model, BoardVo boardVo, CodeVo codeVo) throws Exception{
+	public String boardWrite(Locale locale, Model model, BoardVo boardVo, CodeVo codeVo, HttpServletRequest request) throws Exception{
 		int boardNum = boardService.boardNum();
 		List<CodeVo> codeList = new ArrayList<CodeVo>();
 		codeVo.setCodeType("menu");
 		codeList = boardService.selectCodeType(codeVo);
+		HttpSession session = request.getSession();
+		UserVo user = (UserVo) session.getAttribute(SessionConst.LOGIN_MEMBER);
+		
+		model.addAttribute("user", user);
 		model.addAttribute("boardNum", boardNum + 1);
 		model.addAttribute("code", codeList);
-		System.out.println("boardNum : "+ boardNum);
+//		System.out.println("boardNum : "+ boardNum);
+		
+
+		
+		
 		return "board/boardWrite";
 	}
 	
@@ -168,7 +179,7 @@ public class BoardController {
 	//version2
 	@RequestMapping(value = "/board/manyBoardWriteAction.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String manyBoardWriteAction(@RequestBody List<Map<String, Object>> paramMap) throws Exception {
+	public String manyBoardWriteAction(@RequestBody List<Map<String, Object>> paramMap, HttpServletRequest request) throws Exception {
 	    
 	    ObjectMapper mapper = new ObjectMapper();
 	    List<BoardVo> boardList = new ArrayList<>();

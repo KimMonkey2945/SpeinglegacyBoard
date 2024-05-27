@@ -39,7 +39,8 @@
 // 			    	console.log(data)
 					alert("수정완료");
 					alert("메세지:"+data.success);
-					location.href ="/board/" + updateBoardType + "/" + boardNum + "/boardView.do"
+					location.href ="/board/boardList.do"
+// 					location.href ="/board/" + updateBoardType + "/" + boardNum + "/boardView.do"
 			    },
 			    error: function (jqXHR, textStatus, errorThrown)
 			    {
@@ -97,6 +98,8 @@
 						Writer
 						</td>
 						<td>
+						<input type="hidden" name="creator" value="${board.creator}" />
+						${board.creator}
 						</td>
 					</tr>
 				</table>

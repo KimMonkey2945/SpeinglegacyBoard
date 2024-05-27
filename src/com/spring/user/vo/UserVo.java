@@ -107,8 +107,12 @@ public class UserVo {
 		this.code = code;
 	}
 	
-	
-	
-	
+	@Override
+	public String toString() {
+		return "UserVo [userId=" + userId + ", userPw=" + userPw + ", userName=" + userName + ", userPhone1="
+				+ userPhone1 + ", userPhone2=" + userPhone2 + ", userPhone3=" + userPhone3 + ", userAddr1=" + userAddr1
+				+ ", userAddr2=" + userAddr2 + ", userCompany=" + userCompany + ", creator=" + creator + ", createTime="
+				+ createTime + ", modifier=" + modifier + ", modifiedTime=" + modifiedTime + ", code=" + code + "]";
+	}	
 
 }

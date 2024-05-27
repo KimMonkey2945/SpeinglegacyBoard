@@ -173,7 +173,8 @@
 						<tbody id="addplace"></tbody>
 						<tr>
 							<td align="center">Writer</td>
-							<td></td>
+							<input type="hidden" name="creator" value="${user.userName}" />
+							<td>${user.userName}</td>
 						</tr>
 					</table></td>
 			</tr>

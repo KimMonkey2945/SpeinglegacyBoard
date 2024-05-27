@@ -97,8 +97,11 @@
 
 	<tr>
 		<td align="left" style="width:350px;">
-			<a href="/user/loginForm.do">login</a>
-			<a href="/user/signUpForm.do" >join</a>
+			<div>${user.userName}</div>
+			<c:if test="${empty user}">
+				<a href="/user/loginForm.do">login</a>
+				<a href="/user/signUpForm.do" >join</a>
+    		</c:if>
 		</td>
 		<td id="totalCnt" align="right">
 			total : ${totalCnt}
@@ -141,11 +144,14 @@
 		<c:forEach items='${code}' var='code'>
 			<td style="width: auto"><input type="checkbox" name="boardType" value="${code.codeId}">${code.codeName}</td>
 		</c:forEach>
-<!-- 		<td style="width: auto"><input type="checkbox" name="boardType" value="a02">Q&A</td>
-		<td style="width: auto"><input type="checkbox" name="boardType" value="a03">익명</td>
-		<td style="width: auto"><input type="checkbox" name="boardType" value="a04">자유</td> -->
+
 		<td style="width: auto"><input id="search" type="submit" value="조회"></td>
 		<td style="width: auto"><a href ="/board/boardWrite.do">글쓰기</a></td>
+		<td style="width: auto">	
+    		<c:if test="${not empty user}">
+				<a href ="/user/logoutAction.do">로그아웃</a>
+    		</c:if>
+		</td>
 	</tr>
 </table>
 </body>

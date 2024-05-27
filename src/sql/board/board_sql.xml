@@ -7,6 +7,7 @@
     	<result property="boardNum" 	column="BOARD_NUM"/>
     	<result property="boardTitle" 	column="BOARD_TITLE"/>
     	<result property="boardComment" column="BOARD_COMMENT"/>
+    	<result property="creator" column="CREATOR"/>
     	<!-- <association property="code" javaType="com.spring.board.vo.CodeVo">
             <result property="codeType" column="CODE_TYPE"/>
             <result property="codeId" column="CODE_ID"/>
@@ -53,6 +54,7 @@
 		JOIN COM_CODE C
 		ON B.BOARD_TYPE = C.CODE_ID 
 		WHERE NUMROW BETWEEN (#{pageNo}-1)*10 + 1 AND (#{pageNo})*10
+		ORDER BY B.BOARD_NUM DESC
     </select>
     
     <select id="filteredBoardList" parameterType="java.util.Map" resultMap="boardVo">
@@ -105,6 +107,7 @@
 			,B.BOARD_NUM
 			,B.BOARD_TITLE
 			,B.BOARD_COMMENT
+			,B.CREATOR
 		FROM
 			BOARD B
 		JOIN COM_CODE C
@@ -131,9 +134,9 @@
 	    FROM BOARD)
         ,#{boardTitle}
         ,#{boardComment}
-        ,'SYSTEM'
+        ,#{creator}
         ,TO_CHAR(SYSDATE)
-        ,'SYSTEM'
+        ,#{creator}
         ,TO_CHAR(SYSDATE)
         )
     </select>
@@ -143,7 +146,7 @@
     	SET BOARD_TYPE =  #{updateBoardType}
     	   ,BOARD_TITLE = #{boardTitle}
     	   ,BOARD_COMMENT = #{boardComment}
-    	   ,MODIFIER = 'SYSTEM'
+    	   ,MODIFIER = #{creator}
     	   ,MODIFIED_TIME = TO_CHAR(SYSDATE)
     	WHERE 
     	BOARD_TYPE = #{boardType}
@@ -158,7 +161,7 @@
     </delete>
     
     <select id="boardNum" resultType="Integer">
-    	SELECT MAX(BOARD_NUM) FROM BOARD
+    	SELECT NVL(MAX(BOARD_NUM), 1) FROM BOARD
     </select>
     
     <select id="selectCodeType" parameterType="com.spring.board.vo.CodeVo" resultMap="codeVo">

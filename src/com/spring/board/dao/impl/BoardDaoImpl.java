@@ -63,7 +63,6 @@ public class BoardDaoImpl implements BoardDao{
 	
 	@Override
 	public int boardInsert(BoardVo boardVo) throws Exception {
-		// TODO Auto-generated method stub
 		return sqlSession.insert("board.boardInsert", boardVo);
 	}
 	@Override
