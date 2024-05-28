@@ -66,6 +66,12 @@
                 return false;
 			}
 			
+			if(userId == ""){
+				alert("아이디를입력해주세요.")
+				$('#userId').focus();
+				return false;
+			}
+			
 			// 비밀번호길이, 전화번호, 우편번호
 			var pw =  $('#userPw').val();
 			var userPwCheck = $('#userPwCheck').val();
@@ -76,17 +82,17 @@
 			var userAddr1 = $('#userAddr1').val()
 			var addrRegex = /^\d{3}-\d{3}$/
 			
+			if(pw == ""){
+				alert("비밀번호를입력해주세요.")
+				$('#userPw').focus();
+				return false;
+			}
+			
 			
 			if(pw.length < 6 || pw.length > 12){
 				 alert("비밀번호는 6자이상 12자 이하입니다.");
 				 $('#userPw').focus();
                  return false;
-			}
-			
-			if(userPwCheck != pw){
-				alert("비밀번호가 일치하지 않습니다.");
-				$('#userPwCheck').focus();
-				return false;
 			}
 			
 			if(userPwCheck == ""){
@@ -95,6 +101,13 @@
 				return false;
 			}
 			
+			
+			if(userPwCheck != pw){
+				alert("비밀번호가 일치하지 않습니다.");
+				$('#userPwCheck').focus();
+				return false;
+			}
+		
 			
 			if(userName == ""){
 				alert("이름을 입력해주세요.");
@@ -115,15 +128,32 @@
 			}
 			
 			
-			if (userPhone2.length !== 4 || userPhone3.length !== 4 || !phoneRegex.test(userPhone2) || !phoneRegex.test(userPhone3)) {
-			    alert("전화번호를 입력해주세요.");
+			if (userPhone2.length !== 4) {
+			    alert("전화번호를 네 자리씩 입력해주세요.");
+			    $('#userPhone2').focus();
 			    return false;
 			}
+		
+			if (userPhone3.length !== 4) {
+				$('#userPhone3').focus();
+			    alert("전화번호를 네 자리씩 입력해주세요.");
+			    return false;
+			}
+		
+		
 			// 이 부분이 필요 없을 것같음 구현후에 삭제 검증
 // 			if (!addrRegex.test(userAddr1)) {
 // 				alert("올바른 우편번호 형식은 xxx-xxx 형태입니다.");
 // 				return false;
 // 			}
+			
+			if(userAddr1 != ""){
+				if(userAddr1.length !== 7){
+					alert("우편번호는 여섯자리 입력해주세요.");
+					$('#userAddr1').focus();
+					return false;
+				} 
+			};
 			
 			
 // 			console.log('emptyRequired : ', emptyRequired);
@@ -230,7 +260,7 @@
 		}); 
 		
 		$('#userName').on('keyup', function(){
-			this.value = this.value.replace(/[^ㄱ-ㅎ가-힣]/g, '').substring(0,7);
+			this.value = this.value.replace(/[^ㄱ-ㅎ가-힣]/g, '').substring(0,4);
 		});
 		
 		$('#userPhone2').on('keyup', function(){
@@ -247,6 +277,14 @@
 		        value = value.slice(0, 3) + '-' + value.slice(3, 6);
 		    }
 		    this.value = value;
+		});	
+		
+		$('#userAddr2').on('keyup', function() {
+			this.value = this.value.substring(0,49);
+		});
+		
+		$('#userCompany').on('keyup', function() {
+			this.value = this.value.substring(0,19);
 		});
 		
 	});
@@ -303,7 +341,7 @@
 				</tr>
 				<tr>
 					<td align="center" style="border:1px solid black; width:20%">company</td>
-					<td style="border:1px solid black"><input id="userCompany" name="userCompany"W data-label="회사"></td>
+					<td style="border:1px solid black"><input id="userCompany" name="userCompany" data-label="회사"></td>
 				</tr>
 			
 			</table>

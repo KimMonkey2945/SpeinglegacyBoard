@@ -123,6 +123,11 @@
             $("input[name=checkBox]:checked").each(function() {
                 var $checkboxRow = $(this).closest("tr");
                 var $commentRow = $checkboxRow.next();
+                var $titleRow = $checkboxRow.prev();
+                var $typeRow = $titleRow.prev();
+
+                $typeRow.remove();
+                $titleRow.remove();
                 $checkboxRow.remove();
                 $commentRow.remove();
             });
@@ -136,9 +141,8 @@
 	<form class="boardWrite" id="boardWrite">
 		<table align="center">
 			<tr>
-				<td align="right"><input id="addRow" name="addRow"
-					type="button" value="행추가"> <input id="deleteRow"
-					name="deleteRow" type="button" value="행삭제"> 
+				<td align="right"><input id="addRow" name="addRow" type="button" value="행추가"> 
+				<input id="deleteRow" name="deleteRow" type="button" value="행삭제"> 
 					<input id="submit" name="submit" type="button" value="작성"></td>
 			</tr>
 			<tr>
